@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ButtonComponent } from "../components/app-button.component";
 
 @Component({
   selector: 'app-home',
-  imports: [RouterModule],
+  imports: [RouterModule, ButtonComponent],
   template: `
     <h1>Angular Todo App</h1>
     <p>Welcome to the Angular Todo App!</p>
 
-    <router-outlet />
+    <app-button></app-button>
   `,
   styles: `
   `,
