@@ -5,9 +5,9 @@ import { Component } from '@angular/core';
   selector: 'app-base',
   template: `
     <div class="bg">
-      <div class="container">
+      <main>
         <ng-content></ng-content>
-      </div>
+      </main>
     </div>
   `,
   styles: `
@@ -19,7 +19,7 @@ import { Component } from '@angular/core';
     align-items: center;
   }
 
-  .container {
+  main {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
