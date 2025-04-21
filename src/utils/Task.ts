@@ -6,5 +6,5 @@ export interface Task {
   createdAt: Date;
   updatedAt: Date;
   dueDate: Date;
-  priority: 'low' | 'medium' | 'high';
+  urgent: boolean;
 };
