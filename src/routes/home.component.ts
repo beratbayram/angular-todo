@@ -1,53 +1,21 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  computed,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { BaseComponent } from '../components/base.component';
+import { TaskListComponent } from '../components/task-list.component';
 import { Task } from '../utils/Task';
-import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule } from '@angular/forms';
-import { AccordionModule } from 'primeng/accordion';
 
 @Component({
-  imports: [
-    RouterModule,
-    CommonModule,
-    FormsModule,
-    BaseComponent,
-    CheckboxModule,
-    AccordionModule,
-  ],
+  imports: [BaseComponent, TaskListComponent],
   template: `
     <app-base>
       <h1>Angular Todo App</h1>
-      <p-accordion [multiple]="true">
-        <ul>
-          @for(task of tasks(); track task.id) {
-          <li>
-            <p-accordion-panel value="{{ task.id }}">
-              <p-accordion-header>
-                <ng-template #toggleicon let-active="active">
-                  @if (active) {
-                  <span class="pi pi-angle-up"></span>
-                  } @else {
-                  <span class="pi pi-angle-down"></span>
-                  }
-                </ng-template>
-                <div class="header">
-                  <p-checkbox [(ngModel)]="task.completed" [binary]="true" />
-                  <div class="title">{{ task.title }}</div>
-                  <span class="pi pi-flag-fill" style="color: red"></span>
-                </div>
-              </p-accordion-header>
-              <p-accordion-content>
-                <p>{{ task.description }}</p>
-                <p>Due Date: {{ task.dueDate | date }}</p>
-                <p>Priority: {{ task.priority }}</p>
-              </p-accordion-content>
-            </p-accordion-panel>
-          </li>
-          }
-        </ul>
-      </p-accordion>
+      <app-task-list [(tasks)]="tasks"></app-task-list>
+      {{ debugTasks() }}
     </app-base>
   `,
   styles: `
@@ -55,33 +23,14 @@ import { AccordionModule } from 'primeng/accordion';
     text-align: center;
     margin-bottom: 20px;
   }
-
-  ul {
-    text-align: left;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: space-between;
-  }
-
-  p-checkbox {
-    line-height: 1;
-  }
-
-  .title {
-   vertical-align: middle;
-
-  }
   `,
 })
 export class HomeComponent implements OnInit {
-  tasks: WritableSignal<Task[]> = signal([]);
+  tasks: WritableSignal<Task[]> = signal<Task[]>([]);
+
+  debugTasks = computed(() => {
+    return JSON.stringify(this.tasks(), null, 2);
+  });
 
   ngOnInit() {
     // Simulate fetching tasks from a service
