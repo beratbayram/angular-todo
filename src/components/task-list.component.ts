@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PanelModule } from 'primeng/panel';
-import { ResetLineHeightDirective } from '../directives/reset-line-height';
+import { ResetLineHeightDirective } from '../directives/reset-line-height.directive';
 import { Task } from '../utils/Task';
 
 @Component({
