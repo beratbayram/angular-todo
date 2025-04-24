@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, model } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -19,7 +19,7 @@ import { Task } from '../utils/Task';
   selector: 'app-task-list',
   template: `
     <ul>
-      @for(task of filteredTasks(); track task.id) {
+      @for(task of tasks(); track task.id) {
       <li>
         <p-panel [toggleable]="true">
 
@@ -81,16 +81,6 @@ import { Task } from '../utils/Task';
 })
 export class TaskListComponent {
   tasks = model<Task[]>([], {});
-
-  filteredTasks = computed(() => {
-    return this.tasks().filter((task) => task.completed === this.isCompleted());
-  });
-
-  isCompleted = input(false);
-
-  log() {
-    console.log('TaskListComponent');
-  }
 
   refreshModel() {
     this.tasks.update(structuredClone);
