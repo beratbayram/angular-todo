@@ -2,9 +2,12 @@
 
 @use './reset';
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import "primeicons/primeicons.css";
 
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+}
 * {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
