@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-about-us',
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
     <p>We are dedicated to providing the best user experience.</p>
     <p>Feel free to explore our website and learn more about us.</p>
     <p>Thank you for visiting!</p>
+    <p>Number of ticks: {{ numberOfTicks }}</p>
   `,
   styles: `
   h1 {
@@ -17,4 +18,19 @@ import { Component } from '@angular/core';
   }
   `,
 })
-export class AboutUsComponent {}
+export class AboutUsComponent implements OnDestroy {
+  numberOfTicks = 0;
+  private intervalId: number;
+
+  constructor() {
+    this.intervalId = setInterval(() => {
+      this.numberOfTicks++;
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+}

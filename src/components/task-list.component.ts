@@ -22,7 +22,6 @@ import { Task } from '../utils/Task';
       @for(task of tasks(); track task.id) {
       <li>
         <p-panel [toggleable]="true">
-
           <ng-template #header>
             <p-checkbox
               appResetLineHeight
@@ -80,13 +79,13 @@ import { Task } from '../utils/Task';
   `,
 })
 export class TaskListComponent {
-  tasks = model<Task[]>([], {});
+  tasks = model<Task[]>([]);
 
   refreshModel() {
     this.tasks.update(structuredClone);
   }
 
-  protected handleUrgentChange(task: Task) {
+  handleUrgentChange(task: Task) {
     task.urgent = !task.urgent;
     this.refreshModel();
   }
