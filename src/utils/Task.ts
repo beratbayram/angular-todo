@@ -5,6 +5,6 @@ export interface Task {
   completed: boolean;
   createdAt: Date;
   updatedAt: Date;
-  dueDate: Date;
+  dueDate?: Date;
   urgent: boolean;
 };

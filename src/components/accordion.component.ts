@@ -5,8 +5,8 @@ import { AccordionModule } from 'primeng/accordion';
   imports: [AccordionModule],
   selector: 'app-accordion',
   template: `
-    <p-accordion [value]="open() ? 0 : 1">
-      <p-accordion-panel value="0">
+    <p-accordion [multiple]="true">
+      <p-accordion-panel [value]="0">
         <p-accordion-header>
           <ng-template #toggleicon let-active="active">
             @if (active) {
@@ -22,7 +22,7 @@ import { AccordionModule } from 'primeng/accordion';
         </p-accordion-content>
       </p-accordion-panel>
     </p-accordion>
-  `,
+  `
 })
 export class AccordionComponent {
   header = input.required();

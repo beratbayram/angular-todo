@@ -42,7 +42,7 @@ import { EditTaskComponent } from './edit-task.component';
 export class NewTaskComponent {
   DIALOG_STYLE = { width: '25rem' };
 
-  visible = true;
+  visible = false;
 
   openDialog() {
     this.visible = true;
