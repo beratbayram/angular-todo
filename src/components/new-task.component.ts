@@ -1,23 +1,15 @@
 import { Component } from '@angular/core';
 import { RippleModule } from 'primeng/ripple';
-import { DialogModule } from 'primeng/dialog';
 import { EditTaskComponent } from './edit-task.component';
 
 @Component({
-  imports: [RippleModule, DialogModule, EditTaskComponent],
+  imports: [RippleModule, EditTaskComponent],
   selector: 'app-new-task',
   template: `
     <button class="container" pRipple (click)="openDialog()">
       <div class="pi pi-plus"></div>
     </button>
-    <p-dialog
-      header="New Task"
-      [modal]="true"
-      [(visible)]="visible"
-      [style]="DIALOG_STYLE"
-    >
-      <app-edit-task />
-    </p-dialog>
+    <app-edit-task [(visible)]="visible"/>
   `,
   styles: `
   .container {
@@ -40,7 +32,6 @@ import { EditTaskComponent } from './edit-task.component';
   `,
 })
 export class NewTaskComponent {
-  DIALOG_STYLE = { width: '25rem' };
 
   visible = false;
 

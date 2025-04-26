@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, model } from '@angular/core';
+import { Component, computed, inject, input, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PanelModule } from 'primeng/panel';
 import { ResetLineHeightDirective } from '../directives/reset-line-height.directive';
+import { TasksStorageService } from '../services/TasksStorage.service';
 import { Task } from '../utils/Task';
 
 @Component({
@@ -19,14 +20,14 @@ import { Task } from '../utils/Task';
   selector: 'app-task-list',
   template: `
     <ul>
-      @for(task of tasks(); track task.id) {
+      @for(task of filteredTasks(); track task.id) {
       <li>
         <p-panel [toggleable]="true">
           <ng-template #header>
             <p-checkbox
               appResetLineHeight
-              [(ngModel)]="task.completed"
-              (ngModelChange)="refreshModel()"
+              [ngModel]="task.completed"
+              (ngModelChange)="handleComplete(task)"
               [binary]="true"
             />
             {{ task.title }}
@@ -34,7 +35,7 @@ import { Task } from '../utils/Task';
 
           <ng-template #icons>
             <p-button
-              (click)="handleUrgentChange(task)"
+              (click)="toggleTaskUrgency(task)"
               icon="pi pi-flag-fill"
               rounded
               text
@@ -47,7 +48,21 @@ import { Task } from '../utils/Task';
           </ng-template>
 
           <ng-template #footer>
-            <p>Due Date: {{ task.dueDate | date }}</p>
+            <div class="footer">
+              <p-button
+                (click)="handleDelete(task)"
+                icon="pi pi-trash"
+                rounded
+                text
+                severity="secondary"
+              />
+              @if(task.dueDate) {
+              <p [ngStyle]="{ color: isLate(task) ? 'red' : 'black' }">
+                <span class="pi pi-calendar-clock"></span>
+                {{ task.dueDate | date : 'dd/MM/yyyy hh:mm' }}
+              </p>
+              }
+            </div>
           </ng-template>
         </p-panel>
       </li>
@@ -66,6 +81,14 @@ import { Task } from '../utils/Task';
     padding-bottom: 1rem;
   }
 
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
   .header {
     display: flex;
     align-items: center;
@@ -79,14 +102,46 @@ import { Task } from '../utils/Task';
   `,
 })
 export class TaskListComponent {
+  today = new Date(); // WHY ???
+
+  completed = input(false);
+
   tasks = model<Task[]>([]);
 
-  refreshModel() {
-    this.tasks.update(structuredClone);
+  filteredTasks = computed(() => {
+    if (this.completed()) {
+      return this.tasks().filter((task) => task.completed);
+    }
+    return this.tasks().filter((task) => !task.completed);
+  });
+
+  tasksStorage = inject(TasksStorageService);
+
+  isLate(task: Task): boolean {
+    if (!task.dueDate) return false;
+    const dueTime = new Date(task.dueDate).getTime?.() ?? Infinity;
+
+    return dueTime < this.today.getTime();
   }
 
-  handleUrgentChange(task: Task) {
+  refreshTaskStorage() {
+    this.tasks.set(this.tasksStorage.getAll());
+  }
+
+  toggleTaskUrgency(task: Task) {
     task.urgent = !task.urgent;
-    this.refreshModel();
+    this.tasksStorage.update(task);
+    this.refreshTaskStorage();
+  }
+
+  handleDelete(task: Task) {
+    this.tasksStorage.delete(task);
+    this.refreshTaskStorage();
+  }
+
+  handleComplete(task: Task) {
+    task.completed = !task.completed;
+    this.tasksStorage.update(task);
+    this.refreshTaskStorage();
   }
 }
