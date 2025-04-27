@@ -9,6 +9,20 @@ const TASKS_KEY = 'tasks';
 export class TasksStorageService {
   private latestId = -1;
 
+  consumers = new Map<string, (tasks: Task[]) => void>();
+
+  notifyConsumers(): void {
+    this.consumers.forEach((callback) => callback(this.getAll()));
+  }
+
+  subscribe(consumerId: string, callback: (tasks: Task[]) => void): void {
+    this.consumers.set(consumerId, callback);
+  }
+
+  unsubscribe(consumerId: string): void {
+    this.consumers.delete(consumerId);
+  }
+
   private generateId(): number {
     const tasks = this.getAll();
     if (this.latestId !== -1) {
@@ -29,6 +43,7 @@ export class TasksStorageService {
 
   setAll(tasks: Task[]) {
     localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+    this.notifyConsumers();
   }
 
   getAllCompleted(completed = false): Task[] {
@@ -71,6 +86,9 @@ export class TasksStorageService {
 
   clear(): void {
     localStorage.removeItem(TASKS_KEY);
+    this.latestId = -1;
+    this.consumers.clear();
+    this.notifyConsumers();
   }
 
   getById(id: number): Task | undefined {
